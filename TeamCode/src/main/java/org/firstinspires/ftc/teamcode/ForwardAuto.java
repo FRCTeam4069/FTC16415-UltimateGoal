@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp
-public class Auto extends LinearOpMode {
+public class ForwardAuto extends LinearOpMode {
     private DcMotor left;
     private DcMotor right;
     private DcMotor intake;
@@ -15,7 +15,7 @@ public class Auto extends LinearOpMode {
     private Servo latch;
     private Servo gripper;
 
-    double kP = 0.0004;
+    double kP = 0.0009;
     double errorLeft;
     double errorRight;
 
@@ -55,23 +55,24 @@ public class Auto extends LinearOpMode {
 //        telemetry.addData("PAUSECHAMP", "It SHOULD go back");
 //        telemetry.update();
 //        sleep(750);
-        drive(left, right, -130);
-        latch.setPosition(0.5);
-        sleep(200);
-        intake.setPower(1);
-        sleep(5000);
-        intake.setPower(0);
-        sleep(200);
-        latch.setPosition(0);
-        drive(left, right, 50);
+//        drive(left, right, -140);
+//        latch.setPosition(0.5);
+//        sleep(200);
+//        intake.setPower(1);
+//        sleep(5000);
+//        intake.setPower(0);
+//        sleep(200);
+//        latch.setPosition(0);
+//        drive(left, right, 50);
+        drive(left, right, 80);
     }
     public void drive(DcMotor left, DcMotor right, double inches) {
         double distance = inches * INCHES_PER_TICK;
         totalDistance += distance;
-        if(distance <= 0) {
+        if(distance < 0) {
             errorLeft = totalDistance - left.getCurrentPosition();
             errorRight = totalDistance - right.getCurrentPosition();
-            while((errorLeft + errorRight)/2<-50 && opModeIsActive()){
+            while(opModeIsActive()){
                 errorLeft = totalDistance - left.getCurrentPosition();
                 errorRight = totalDistance - right.getCurrentPosition();
                 left.setPower((errorLeft * kP) - (errorRight - errorLeft));
@@ -87,7 +88,7 @@ public class Auto extends LinearOpMode {
         } else {
             errorLeft = totalDistance - left.getCurrentPosition();
             errorRight = totalDistance - right.getCurrentPosition();
-            while ((errorLeft + errorRight) / 2 > 50 && opModeIsActive()) {
+            while (opModeIsActive()) {
                 errorLeft = totalDistance - left.getCurrentPosition();
                 errorRight = totalDistance - right.getCurrentPosition();
                 left.setPower(errorLeft * kP);
@@ -95,8 +96,7 @@ public class Auto extends LinearOpMode {
                 telemetry.addData("distance", distance);
                 telemetry.addData("errorLeft", errorLeft);
                 telemetry.addData("errorRight", errorRight);
-                telemetry.addData("powahLeft", left.getPower());
-                telemetry.addData("powahRight", right.getPower());
+                telemetry.addData("powah", left.getPower());
                 telemetry.update();
                 idle();
             }

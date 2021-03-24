@@ -36,8 +36,8 @@ public class TestOpDrive extends OpMode {
 
     @Override
     public void loop() {
-        double speed = gamepad1.right_trigger - gamepad1.left_trigger;
-        double turn = -1 * gamepad1.left_stick_x;
+        double speed = (gamepad1.right_trigger - gamepad1.left_trigger) + ((gamepad1.right_bumper?1:0) + (gamepad1.left_bumper?-1:0));
+        double turn = (-1 * gamepad1.left_stick_x) + (-0.5*gamepad1.right_stick_x);
 
         intake.setPower((gamepad2.right_trigger) - (gamepad2.left_trigger));
         arm.setPower(-1*gamepad2.left_stick_y);
